@@ -1,36 +1,132 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# API Rate Limiter with Next.js
 
-## Getting Started
+A modern web application built with Next.js that provides a user interface for testing API rate limiting. The project includes both a frontend interface for testing various APIs and a backend implementation of rate limiting using Redis.
 
-First, run the development server:
+## Features
 
+- Test rate limiting on any API endpoint
+- Visual interface showing request logs and rate limit status
+- Built-in support for GitHub API testing
+- Redis-based rate limiting implementation
+- Dark mode UI
+- Real-time request tracking
+
+## Prerequisites
+
+Before you begin, ensure you have installed:
+
+- Node.js (v18 or later)
+- Redis (v6 or later)
+- npm or yarn
+
+## Installation
+
+1. Clone the repository:
+```bash
+git clone [your-repo-url]
+cd rate-limiter-api
+```
+
+2. Install dependencies:
+```bash
+npm install
+# or
+yarn install
+```
+
+3. Set up environment variables:
+Create a `.env.local` file in the root directory:
+```env
+REDIS_URL=redis://localhost:6379
+```
+
+4. Start Redis:
+```bash
+# On Windows (WSL)
+sudo service redis-server start
+
+# On macOS
+brew services start redis
+
+# Using Docker
+docker run --name redis -p 6379:6379 -d redis
+```
+
+5. Run the development server:
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the application.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Usage
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Access the web interface at `http://localhost:3000`
+2. Enter an API URL to test
+3. Click "Test Rate Limit" to send requests
+4. View the request logs and rate limit status in real-time
 
-## Learn More
+### Example APIs for Testing
 
-To learn more about Next.js, take a look at the following resources:
+- GitHub API Rate Limits: `https://api.github.com/rate_limit`
+- GitHub User Info: `https://api.github.com/users/[username]`
+- Test API: `https://jsonplaceholder.typicode.com/posts/1`
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## API Endpoints
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+### Rate Limiter Endpoint
 
-## Deploy on Vercel
+```
+GET /api/rate-limiter
+```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Returns:
+- `200 OK` if request is allowed
+- `429 Too Many Requests` if rate limit exceeded
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Headers:
+- `X-RateLimit-Remaining`: Number of requests remaining
+- `X-RateLimit-Reset`: Time until rate limit reset
+
+### URL Testing Endpoint
+
+```
+POST /api/test-url
+```
+
+Body:
+```json
+{
+  "url": "https://api.example.com"
+}
+```
+
+## Rate Limiting Configuration
+
+Default settings:
+- 10 requests per minute per IP
+- 60-second window
+- Redis-based storage for rate limit data
+
+## Technology Stack
+
+- [Next.js](https://nextjs.org/) - React framework
+- [Redis](https://redis.io/) - Rate limit data storage
+- [Tailwind CSS](https://tailwindcss.com/) - Styling
+- [ioredis](https://github.com/luin/ioredis) - Redis client
+
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## Acknowledgments
+
+- Next.js team for the excellent framework
+- Vercel for deployment platform
+- Redis for rate limiting storage solution
